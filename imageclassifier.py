@@ -61,3 +61,23 @@ train_batches = dataset['train'].shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
 test_batches = dataset['test'].batch(BATCH_SIZE)
 
 history = model.fit(train_batches, epochs=10, validation_data=test_batches)
+#cell 8
+loss, accuracy = model.evaluate(test_batches)
+print(f'Test loss: {loss}, Test accuracy: {accuracy}')
+#cell 9 
+import numpy as np
+
+for test_images, test_labels in test_batches.take(1):
+  predictions = model.predict(test_images)
+
+plt.figure(figsize=(10, 10))
+for i in range(9):
+  plt.subplot(3, 3, i + 1)
+  plt.imshow(test_images[i].numpy().squeeze(), cmap='gray')
+  predicted_label = np.argmax(predictions[i])
+  true_label = test_labels[i].numpy()
+  title = f"Pred: {info.features['label'].int2str(predicted_label)}\nTrue: {info.features['label'].int2str(true_label)}"
+  color = 'green' if predicted_label == true_label else 'red'
+  plt.title(title, color=color)
+  plt.axis('off')
+plt.show()
